@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <title>Tic Tac Toe</title>
@@ -57,28 +57,91 @@
             }
 
             function sum(arr) {
-                return arr.reduce((a, b) => { a + b }); //Use an Array.reduce to return the sum of an array
+                return arr.reduce((a, b) => { return a + b }); //Use an Array.reduce to return the sum of an array
             }
+            function winFound(arr) {
+                var returnVal = false;
+                switch (sum(arr)) {
+                    //If three X's in a row, 1 + 1 + 1 == 3
+                    case 3:
+                        returnVal = true;
+                        break;
+                    //If three 0's in a row, 0 + 0 + 0 == 0
+                    case 0:
+                        returnVal = true;
+                        break;
+                    //If neither (1 + 0 + NaN == NaN)
+                    default:
+                        returnVal = false;
+                        break;
+                }
+                return returnVal;
+            }
+            function decodeHTML(html) {
+                var textarea = document.createElement("textarea");
+                textarea.innerHTML = html;
+                return textarea.value;
+            }
+
             //alert(sum([0, null, 1])) //Returns undefined!
-            var table = [];
+            //var logicBoardTable = [];
             const X = "&#10005;";
             const O = "&#9711;";
-            var turn = X; //Start the turn off
+            var turn = X; //Start the turn off with X
+            function getNextTurn() {
+                return (turn === X) ? O : X; //Switch turn
+            }
             function addMoveToBoard(event) {
                 var targetElement = event.path[0]; //The target element will be the first in the click's DOM path
                 //console.log(event);
                 //If the square is empty, add the mark, else does nothing
                 if (targetElement.innerHTML === "") {
                     targetElement.innerHTML = turn;
-                    turn = (turn === X) ? O : X; //Switch turn
+                    turn = getNextTurn() //Increment the turn
+                    //Now move to game logic
+                    checkWin();
                 }
             }
 
-            function addMoveToLogicBoard() {
-
+            function getBoardAsMatrixRepresentation() {
+                //Get matrix of all turns already made
+                //console.log([ticTacToeTable.rows]);
+                var logicBoardTable = [];
+                for (var i = 0; i < ticTacToeTable.rows.length; i++) {
+                    var row = ticTacToeTable.rows[i];
+                    console.log(row);
+                    var logicBoardTableRow = [];
+                    for (var j = 0; j < row.children.length; j++) {
+                        var box = row.children[j];
+                        var appendValue = undefined;
+                        switch (box.innerHTML) {
+                            case "✕":
+                                appendValue = 1;
+                                break;
+                            case "◯":
+                                appendValue = 0;
+                                break;
+                            case "":
+                                appendValue = NaN;
+                                break;
+                        }
+                        logicBoardTableRow.push(appendValue);
+                    }
+                    logicBoardTable.push(logicBoardTableRow);
+                }
+                console.log(logicBoardTable);
+                return logicBoardTable;
+                //Now that we have updated our board let's check to make sure
             }
 
             function checkWin() {
+                var win = 0; //If winFound(), add True to 0 to get positive value, then if win > 0, someone won
+                const logicBoardTable = getBoardAsMatrixRepresentation();
+                //Function to check if given array has a win
+                
+                if (win) {
+                    alert(`${turn} won!`);
+                }
             }
         </script>
     </body>
