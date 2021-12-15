@@ -5,12 +5,15 @@
         <style>
             #ticTacToeTable {
                 border-collapse: collapse;
-
+                /*Styles for the X's and O's*/
+                font-size: 50px;
+                text-align: center;
             }
                 #ticTacToeTable td {
                     border: 3px solid black;
                     width: 80px;
                     height : 80px;
+                    cursor: pointer; /*Normally use :hover selector but lazy*/
                 }
                 /*All left boxes remove border*/
                 #ticTacToeTable td:nth-child(1) {
@@ -33,15 +36,49 @@
     <body>
         <table id="ticTacToeTable"></table>
         <script>
-            //Prep table
+            //Create Tic-Tac-Toe Board
             var ticTacToeTable = document.querySelector("#ticTacToeTable");
+            var table = [];
             for (var i = 0; i < 3; i++) {
                 var tr = document.createElement("tr");
+                //For actual game logic
+                var row = [];
                 for (var j = 0; j < 3; j++) {
                     var td = document.createElement("td");
+                    td.addEventListener("click", addMoveToBoard);
                     tr.appendChild(td);
+                    //For actual game logic
+                    var square = null;
+                    row.push(square);
                 }
                 ticTacToeTable.appendChild(tr);
+
+                table.push(row);
+            }
+
+            function sum(arr) {
+                return arr.reduce((a, b) => { a + b }); //Use an Array.reduce to return the sum of an array
+            }
+            //alert(sum([0, null, 1])) //Returns undefined!
+            var table = [];
+            const X = "&#10005;";
+            const O = "&#9711;";
+            var turn = X; //Start the turn off
+            function addMoveToBoard(event) {
+                var targetElement = event.path[0]; //The target element will be the first in the click's DOM path
+                //console.log(event);
+                //If the square is empty, add the mark, else does nothing
+                if (targetElement.innerHTML === "") {
+                    targetElement.innerHTML = turn;
+                    turn = (turn === X) ? O : X; //Switch turn
+                }
+            }
+
+            function addMoveToLogicBoard() {
+
+            }
+
+            function checkWin() {
             }
         </script>
     </body>
