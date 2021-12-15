@@ -5,6 +5,7 @@
         <style>
             #ticTacToeTable {
                 border-collapse: collapse;
+                margin: 0 auto;
                 /*Styles for the X's and O's*/
                 font-size: 50px;
                 text-align: center;
@@ -77,6 +78,7 @@
                 }
                 return returnVal;
             }
+            //converts the HTML entity hash into its actual symbol
             function decodeHTML(html) {
                 var textarea = document.createElement("textarea");
                 textarea.innerHTML = html;
@@ -115,10 +117,10 @@
                         var box = row.children[j];
                         var appendValue = undefined;
                         switch (box.innerHTML) {
-                            case "✕":
+                            case decodeHTML(X):
                                 appendValue = 1;
                                 break;
-                            case "◯":
+                            case decodeHTML(O):
                                 appendValue = 0;
                                 break;
                             case "":
@@ -137,10 +139,32 @@
             function checkWin() {
                 var win = 0; //If winFound(), add True to 0 to get positive value, then if win > 0, someone won
                 const logicBoardTable = getBoardAsMatrixRepresentation();
-                //Function to check if given array has a win
-                
-                if (win) {
-                    alert(`${turn} won!`);
+                //First check if any of the rows have a win
+                for (var i = 0; i < logicBoardTable.length; i++) {
+                    win += winFound(logicBoardTable[i]);
+                }
+                //Now check if any of the columns have a win
+                for (var i = 0; i < logicBoardTable.length; i++) {
+                    var columnArr = [];
+                    for (var j = 0; j < logicBoardTable[i].length; j++) {
+                        columnArr.push(logicBoardTable[j][i]); //Reverse the i,j coordinates to mimic a matrix transpose
+                    }
+                    win += winFound(columnArr);
+                }
+                //Finally check the two diagonals
+                var topLeftToBottomRightDiagonal = [];
+                var topRightToBottomLeftDiagonal = [];
+                for (var i = 0; i < logicBoardTable.length; i++) {
+                    topLeftToBottomRightDiagonal.push(logicBoardTable[i][i]);
+                    topRightToBottomLeftDiagonal.push(logicBoardTable[i][logicBoardTable.length - 1 - i]);
+                }
+                for (var arr of [topLeftToBottomRightDiagonal, topRightToBottomLeftDiagonal]) {
+                    //console.log(arr);
+                    win += winFound(arr);
+                }
+                if (win > 0) {
+                    alert(`${decodeHTML(getNextTurn())} won!\nPress ok to restart...`);
+                    window.location.reload();
                 }
             }
         </script>
